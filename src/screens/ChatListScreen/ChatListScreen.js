@@ -3,20 +3,21 @@ import { SafeAreaView, View, Text } from "react-native";
 import Avatar from "../../../components/Avatar";
 import chatMessageServices from "../../services/chatMessageServices";
 import userServices from "../../services/userServices";
+import { useAuthStore } from "../../store/AuthStore";
 
 import ChatListScreenStyles from "./ChatListScreenStyles";
 
 function ChatListScreen() {
     const [friends, setFriends] = useState([]);
     const [chatMessageHistorys, setchatMessageHistorys] = useState([]);
-    const [currentUser, setCurrentUser] = useState();
+
+    const authStore = useAuthStore();
 
     useEffect(() => {
         const loadData = async () => {
-            const currentUserData = await userServices.getCurrentUser();
-            setCurrentUser(currentUserData);
+            const userId = authStore?.user?.id;
 
-            const userId = currentUserData?.id;
+            console.log("userId: ", userId);
 
             const friendsData = await userServices.getFriendByUserId(userId);
             setFriends(friendsData);
@@ -28,12 +29,12 @@ function ChatListScreen() {
         loadData();
     }, []);
 
-    console.log("currentUser: ", currentUser);
+    console.log("authStore.state.user: ", authStore.state.user);
 
     return (
         <SafeAreaView style={ChatListScreenStyles.wrapper}>
             <View>
-                <Avatar size={60} src={currentUser.avatar} rounded />
+                <Avatar size={60} src={authStore.state.user?.avatar} rounded />
             </View>
             <View>
                 {friends.map((friend, index) => (

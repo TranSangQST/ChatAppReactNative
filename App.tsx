@@ -25,6 +25,9 @@ import {
     ReloadInstructions,
 } from "react-native/Libraries/NewAppScreen";
 import ChatListScreen from "./src/screens/ChatListScreen";
+import ChatAppReactNative from "./ChatAppReactNative";
+import { FetchingProvider } from "./src/store/FetchingApiStore";
+import { AuthProvider } from "./src/store/AuthStore";
 
 type SectionProps = PropsWithChildren<{
     title: string;
@@ -34,7 +37,11 @@ function App(): JSX.Element {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ChatListScreen />
+            <FetchingProvider>
+                <AuthProvider>
+                    <ChatAppReactNative />
+                </AuthProvider>
+            </FetchingProvider>
         </SafeAreaView>
     );
 }
